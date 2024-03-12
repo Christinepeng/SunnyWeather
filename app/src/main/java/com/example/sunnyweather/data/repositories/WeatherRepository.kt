@@ -3,14 +3,24 @@ package com.example.sunnyweather.data.repositories
 import android.util.Log
 import com.example.sunnyweather.data.services.WeatherService
 import com.example.sunnyweather.model.WeatherData
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Instant
 
 class WeatherRepository {
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Instant::class.java, JsonDeserializer { json, _, _ ->
+            Instant.parse(json.asJsonPrimitive.asString)
+        })
+        .create()
+
     private val weatherService: WeatherService by lazy {
+        Log.e("xd", "build Retrofit")
         Retrofit.Builder()
             .baseUrl("https://api.tomorrow.io/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(WeatherService::class.java)
     }
