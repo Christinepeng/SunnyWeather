@@ -40,7 +40,8 @@
             android:layout_weight="0.7"
             android:hint="@string/enter_location"
             android:inputType="text"
-            android:text=""/>
+            android:text=""
+            android:autofillHints="location" />
 
         <Button
             android:id="@+id/search_button"
@@ -57,10 +58,10 @@
         android:id="@+id/weather_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Result"
+        android:hint="@string/result"
         android:text="@{viewModel.weatherData.toString()}"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         />
     </LinearLayout>
 
