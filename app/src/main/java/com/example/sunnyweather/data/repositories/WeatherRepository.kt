@@ -10,14 +10,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.time.Instant
 
 class WeatherRepository {
-    val gson = GsonBuilder()
+    private val gson = GsonBuilder()
         .registerTypeAdapter(Instant::class.java, JsonDeserializer { json, _, _ ->
             Instant.parse(json.asJsonPrimitive.asString)
         })
         .create()
 
     private val weatherService: WeatherService by lazy {
-        Log.e("xd", "build Retrofit")
         Retrofit.Builder()
             .baseUrl("https://api.tomorrow.io/")
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -27,16 +26,15 @@ class WeatherRepository {
 
     suspend fun getWeatherByLocation(location: String): WeatherData? {
         return try {
-            Log.e("xd", "send request $location")
-            val response = weatherService.getWeatherByLocation(location, "hrWCevltc3xfWzjklzMpoV8dsRKQv227")
-            Log.e("xd", "Receive response $response")
+            val response = weatherService.getWeatherByLocation(location)
             if (response.isSuccessful) {
+                Log.e("xd", "Receive response ${response.body()}")
                 response.body()
             } else {
-                null // or handle exceptions as needed
+                null // or handle errors as needed
             }
         } catch (e: Exception) {
-            Log.e("xd", "exception $e")
+            Log.e("xd", "Exception $e")
             null // or handle exceptions as needed
         }
     }
